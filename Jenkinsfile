@@ -33,5 +33,16 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy to TEST') {
+            when { not { branch "main" } }
+            steps {
+                sh """
+                    oc set image deployment home-automation \
+                    home-automation=quay.io/${QUAY_USER}/do400-deploying-lab:build-${BUILD_NUMBER} \
+                    -n nusomg-deploying-lab-test --record
+                """
+            }
+        }
     }
 }
